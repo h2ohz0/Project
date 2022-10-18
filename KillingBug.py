@@ -54,7 +54,7 @@ while running:
     handle_events()
     frame = (frame + 1) % 5
 
-    delay(0.03)
+    delay(0.05)
     if x > 400:
         dir_x -= 1
     elif x < 0:
