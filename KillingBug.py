@@ -54,14 +54,6 @@ while running:
     handle_events()
     frame = (frame + 1) % 5
 
-    delay(0.05)
-    if x > 400:
-        dir_x -= 1
-    elif x < 0:
-        dir_x += 1
-    elif y < 0:
-        dir_y += 1
-    elif y > 600:
-        dir_y -= 1
+    delay(0.02)
 
 close_canvas()
