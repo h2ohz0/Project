@@ -1,26 +1,13 @@
 from pico2d import *
 import title_state
 import game_framework
+import game_world
 
-class Grass:
-    def __init__(self):
-        self.image = load_image('grass.png')
+from character import Character
+from bg_jungle import BG_jungle
 
-    def draw(self):
-        self.image.draw(400, 30)
-
-class Boy:
-    def __init__(self):
-        self.x, self.y = 0, 90
-        self.frame = 0
-        self.image = load_image('run_animation.png')
-
-    def update(self):
-        self.frame = (self.frame + 1) % 8
-        self.x += 1
-
-    def draw(self):
-        self.image.clip_draw(self.frame*100, 0, 100, 100, self.x, self.y)
+character = None
+bg_jungle = None
 
 
 def handle_events():
@@ -29,47 +16,49 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_state(title_state)
-        delay(0.01)
-
-#게임 초기화 : 객체들을 생성
-boy = None # c NULL
-grass = None
-running = True
+            game_framework.quit()
+        else:
+            character.handle_event(event)
 
 def enter():
-    global boy, grass, running
-    boy = Boy()
-    grass = Grass()
-    running = True
-
+    global character, bg_jungle
+    character = Character()
+    bg_jungle = BG_jungle()
+    game_world.add_object(bg_jungle, 0)
+    game_world.add_object(character, 1)
 
 #게임 종료 - 객체를 소멸
 def exit():
-    global boy, grass
-    del boy
-    del grass
+    game_world.clear()
 
 #게임 월드 객체를 업데이트 - 게임 로직
 def update():
-    boy.update()
+    for game_object in game_world.all_objects():
+        game_object.update()
 
+def draw_world():
+    for game_object in game_world.all_objects():
+        game_object.draw()
 
 def draw():
     # 게임 월드 랜더링
     clear_canvas()
-    grass.draw()
-    boy.draw()
+    draw_world()
     update_canvas()
 
-open_canvas()
+def pause():
+    pass
 
-enter()
-while running:
-    handle_events()
-    update()
-    draw()
-exit()
+def resume():
+    pass
 
-close_canvas()
 
+def test_self():
+    import play_state
+
+    pico2d.open_canvas()
+    game_framework.run(play_state)
+    pico2d.clear_canvas()
+
+if __name__ == '__main__':
+    test_self()
