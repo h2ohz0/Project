@@ -1,7 +1,11 @@
 from pico2d import *
 
 # Game object class here
+open_canvas()
+boy = Boy()
+grass = Grass()
 
+running = True
 def handle_events():
     global running
     events = get_events()
@@ -32,5 +36,16 @@ class Boy:
     def draw(self):
         self.image.clip_draw(self.frame*100,0,100,100,self.x, self.y)
 # game main loop code
+while running:
+    handle_events()
 
+    boy.update()
+
+    clear_canvas()
+    grass.draw()
+    boy.draw()
+    update_canvas()
+
+    delay(0.05)
 # finalization code
+close_canvas()
