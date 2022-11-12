@@ -16,8 +16,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-        # else:
-        #     character.handle_event(event)
+        else:
+            character.handle_event(event)
 
 def enter():
     global character, bg_jungle
