@@ -29,7 +29,7 @@ class IDLE:
 
     @staticmethod
     def do(self):
-        self.frame = (self.frame + 1) % 8
+        # self.frame = (self.frame + 1) % 8
         self.timer -= 1
         if self.timer == 0:
             self.add_event(TIMER)
@@ -38,9 +38,9 @@ class IDLE:
     @staticmethod
     def draw(self):
         if self.face_dir == 1:
-            self.image.clip_draw(self.frame * 100, 300, 100, 100, self.x, self.y)
+            self.image.draw(200,300)
         else:
-            self.image.clip_draw(self.frame * 100, 200, 100, 100, self.x, self.y)
+            self.image.draw(200,300)
 
 
 class RUN:
@@ -61,15 +61,15 @@ class RUN:
 
 
     def do(self):
-        self.frame = (self.frame + 1) % 8
+        # self.frame = (self.frame + 1) % 8
         self.x += self.dir
         self.x = clamp(0, self.x, 1600)
 
     def draw(self):
         if self.dir == -1:
-            self.image.clip_draw(self.frame*100, 0, 100, 100, self.x, self.y)
+            self.image.draw(200,300)
         elif self.dir == 1:
-            self.image.clip_draw(self.frame*100, 100, 100, 100, self.x, self.y)
+            self.image.draw(200,300)
 
 
 class SLEEP:
