@@ -29,7 +29,7 @@ class IDLE:
 
     @staticmethod
     def do(self):
-        # self.frame = (self.frame + 1) % 8
+        self.frame = (self.frame + 1) % 8
         self.timer -= 1
         if self.timer == 0:
             self.add_event(TIMER)
@@ -85,8 +85,7 @@ class SLEEP:
         self.frame = (self.frame + 1) % 8
 
     def draw(self):
-            self.image.draw(200,300)
-
+        pass
 
 #3. 상태 변환 구현
 
