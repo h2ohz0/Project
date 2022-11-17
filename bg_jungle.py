@@ -1,5 +1,5 @@
 from pico2d import *
-
+width, height = 1024, 684
 class BG_jungle:
     def __init__(self):
         self.image = load_image('background_jungle.png')
@@ -8,7 +8,7 @@ class BG_jungle:
         pass
 
     def draw(self):
-        self.image.draw(400, 300)
+        self.image.draw(width//2, height//2)
 
 
 
