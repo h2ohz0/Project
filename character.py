@@ -1,143 +1,161 @@
 from pico2d import *
+from Star import Star
+from sight import Sight
+import game_framework
 import game_world
-# from ball import Ball
+width, height = 1024, 684
+blind = True
 
-#1 : 이벤트 정의
-RD, LD, RU, LU, TIMER, SPACE = range(6)
-event_name = ['RD', 'LD', 'RU', 'LU', 'TIMER', 'SPACE']
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
+
+RIGHTKEY_DOWN, LEFTKEY_DOWN, UPKEY_DOWN, DOWNKEY_DOWN, RIGHTKEY_UP, LEFTKEY_UP, UPKEY_UP, DOWNKEY_UP, SPACE = range(9)
 
 key_event_table = {
-    (SDL_KEYDOWN, SDLK_RIGHT): RD,
-    (SDL_KEYDOWN, SDLK_LEFT): LD,
-    (SDL_KEYUP, SDLK_RIGHT): RU,
-    (SDL_KEYUP, SDLK_LEFT): LU
+    (SDL_KEYDOWN, SDLK_RIGHT): RIGHTKEY_DOWN,
+    (SDL_KEYDOWN, SDLK_LEFT): LEFTKEY_DOWN,
+    (SDL_KEYDOWN, SDLK_UP): UPKEY_DOWN,
+    (SDL_KEYDOWN, SDLK_DOWN): DOWNKEY_DOWN,
+    (SDL_KEYUP, SDLK_RIGHT): RIGHTKEY_UP,
+    (SDL_KEYUP, SDLK_LEFT): LEFTKEY_UP,
+    (SDL_KEYUP, SDLK_UP): UPKEY_UP,
+    (SDL_KEYUP, SDLK_DOWN): DOWNKEY_UP,
+    (SDL_KEYDOWN, SDLK_SPACE): SPACE
 }
-
-
-#2 : 상태의 정의
-class IDLE:
+class WalkingState:
     @staticmethod
-    def enter(self,event):
-        print('ENTER IDLE')
-        self.dir = 0
-        self.timer = 1000
+    def enter(character, event):
+        if event == RIGHTKEY_DOWN:
+            character.x_velocity += RUN_SPEED_PPS
+            character.x_dir += 1
+        elif event == RIGHTKEY_UP:
+            character.x_velocity -= RUN_SPEED_PPS
+            character.x_dir -= 1
+        if event == LEFTKEY_DOWN:
+            character.x_velocity -= RUN_SPEED_PPS
+            character.x_dir -= 1
+        elif event == LEFTKEY_UP:
+            character.x_velocity += RUN_SPEED_PPS
+            character.x_dir += 1
+
+        if event == UPKEY_DOWN:
+            character.y_velocity += RUN_SPEED_PPS
+            character.y_dir += 1
+        elif event == UPKEY_UP:
+            character.y_velocity -= RUN_SPEED_PPS
+            character.y_dir -= 1
+        if event == DOWNKEY_DOWN:
+            character.y_velocity -= RUN_SPEED_PPS
+            character.y_dir -= 1
+        elif event == DOWNKEY_UP:
+            character.y_velocity += RUN_SPEED_PPS
+            character.y_dir += 1
+
+
 
     @staticmethod
-    def exit(self, event):
-        print('EXIT IDLE')
-
-
-    @staticmethod
-    def do(self):
-        self.frame = (self.frame + 1) % 8
-        self.timer -= 1
-        if self.timer == 0:
-            self.add_event(TIMER)
-
+    def exit(character, event):
+        character.face_dir = character.dir
+        if event == SPACE:
+            character.star()
+        elif event == SDLK_a:
+            character.sight()
 
     @staticmethod
-    def draw(self):
-        if self.face_dir == 1:
-            self.image.draw(200,300)
-        else:
-            self.image.draw(200,300)
+    def do(character):
+        character.frame = (character.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
+        character.x += character.x_velocity * game_framework.frame_time
+        character.y += character.y_velocity * game_framework.frame_time
+        character.x = clamp(25, character.x, get_canvas_width() - 25)
+        character.y = clamp(25, character.y, get_canvas_height() - 25)
+
+    @staticmethod
+    def draw(character):
+        if character.x_dir>0:
+            character.image.clip_draw(int(character.frame) * 100, 0, 100, 100, character.x, character.y)
+            character.dir = 4
+        elif character.x_dir <0:
+            character.image.clip_draw(int(character.frame) * 100, 100, 100, 100, character.x, character.y)
+            character.dir = 5
+        elif character.x_dir ==0 and character.y_dir >0:
+            character.image.clip_draw(int(character.frame) * 100, 200, 100, 100, character.x, character.y)
+            character.dir = 6
+        elif character.x_dir ==0 and character.y_dir <0:
+            character.image.clip_draw(int(character.frame) * 100, 300, 100, 100, character.x, character.y)
+            character.dir = 7
+        elif character.x_dir ==0 and character.y_dir ==0:
+            character.image.clip_draw(int(character.frame) * 100, abs((character.face_dir))*100, 100, 100, character.x, character.y)
 
 
-class RUN:
-    def enter(self, event):
-        print('ENTER RUN')
-        if event == RD:
-            self.dir += 1
-        elif event == LD:
-            self.dir -= 1
-        elif event == RU:
-            self.dir -= 1
-        elif event == LU:
-            self.dir += 1
-
-    def exit(self, event):
-        print('EXIT RUN')
-        self.face_dir = self.dir
-
-
-    def do(self):
-        self.x += self.dir
-        self.x = clamp(0, self.x, 1600)
-
-    def draw(self):
-        if self.dir == -1:
-            self.image.draw(200,300)
-        elif self.dir == 1:
-            self.image.draw(200,300)
-
-
-class SLEEP:
-
-    def enter(self, event):
-        print('ENTER SLEEP')
-        self.frame = 0
-
-    def exit(self, event):
-        pass
-
-    def do(self):
-        self.frame = (self.frame + 1) % 8
-
-    def draw(self):
-        pass
-
-#3. 상태 변환 구현
-
-next_state = {
-    IDLE:  {RU: RUN,  LU: RUN,  RD: RUN,  LD: RUN, TIMER: SLEEP},
-    RUN:   {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE},
-    SLEEP: {RU: RUN, LU: RUN, RD: RUN, LD: RUN}
+next_state_table = {
+    WalkingState: {RIGHTKEY_UP: WalkingState, LEFTKEY_UP: WalkingState, RIGHTKEY_DOWN: WalkingState, LEFTKEY_DOWN: WalkingState,
+                UPKEY_UP: WalkingState, UPKEY_DOWN: WalkingState, DOWNKEY_UP: WalkingState, DOWNKEY_DOWN: WalkingState,
+                SPACE: WalkingState}
 }
-
-
 
 
 class Character:
-
+    image = None
     def __init__(self):
-        self.x, self.y = 200,300
+        self.x, self.y = 50, 90
+        if Character.image is None:
+            Character.image =load_image('char1.png')
         self.frame = 0
-        self.dir, self.face_dir = 0, 1
-        self.image = load_image('char1.png')
-
-        self.timer = 100
-
-        self.event_que = []
-        self.cur_state = IDLE
+        self.dir = 1
+        self.face_dir =4
+        self.x_dir, self.y_dir = 0, 0
+        self.x_velocity, self.y_velocity =0, 0
+        self.q = []
+        self.cur_state = WalkingState
         self.cur_state.enter(self, None)
 
-    def update(self):
-        self.cur_state.do(self)
+    def __getstate__(self):
+        state = {'x': self.x, 'y': self.y, 'dir': self.dir, 'cur_state': self.cur_state}
+        return state
 
-        if self.event_que:
-            event = self.event_que.pop()
-            self.cur_state.exit(self, event)
-            try:
-                self.cur_state = next_state[self.cur_state][event]
-            except KeyError:
-                print(f'ERROR: State {self.cur_state.__name__}    Event {event_name[event]}')
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
+
+    def star(self):
+        # star = Star.star_diretion(self.dir)
+        star = Star(self.x, self.y, self.dir * 0.5,self.face_dir)
+        game_world.add_object(star, 1)
+
+    def sight(self):
+        print('sight')
+        sight = Sight(self.x, self.y)
+        game_world.add_object(sight, 2)
+    def update(self):
+
+        self.cur_state.do(self)
+        if len(self.q) > 0: # q에 뭔가 있다면
+            event = self.q.pop()#이벤트를 가져오고
+            self.cur_state.exit(self,event)  #현재 상태를 나가고,
+            self.cur_state = next_state_table[self.cur_state][event] #다음 상태를 계산하기
             self.cur_state.enter(self, event)
 
     def draw(self):
         self.cur_state.draw(self)
 
-    def add_event(self, event):
-        self.event_que.insert(0, event)
 
-    def handle_event(self, event):
+    def add_event(self,event):
+        self.q.insert(0, event)
+
+    def handle_event(self,event): # 소년이 스스로 이벤트를 처리할수 있게
+        # event 는 키이벤트, 이것을 내부 rd 등으로 변환
         if (event.type, event.key) in key_event_table:
-            key_event = key_event_table[(event.type, event.key)]
-            self.add_event(key_event)
+            key_event = key_event_table[(event.type), event.key]
+            self.add_event(key_event) #변환된 내부 이벤트를 큐에 추가
 
-    # def fire_ball(self):
-    #     print('FIRE BALL')
-    #     ball = Ball(self.x, self.y, self.face_dir*2)
-    #     game_world.add_object(ball, 1)
+
 
 # from pico2d import *
 # import game_world
