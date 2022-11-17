@@ -19,15 +19,15 @@ FRAMES_PER_ACTION = 8
 RIGHTKEY_DOWN, LEFTKEY_DOWN, UPKEY_DOWN, DOWNKEY_DOWN, RIGHTKEY_UP, LEFTKEY_UP, UPKEY_UP, DOWNKEY_UP, SPACE = range(9)
 
 key_event_table = {
-    (SDL_KEYDOWN, SDLK_RIGHT): RIGHTKEY_DOWN,
-    (SDL_KEYDOWN, SDLK_LEFT): LEFTKEY_DOWN,
-    (SDL_KEYDOWN, SDLK_UP): UPKEY_DOWN,
-    (SDL_KEYDOWN, SDLK_DOWN): DOWNKEY_DOWN,
-    (SDL_KEYUP, SDLK_RIGHT): RIGHTKEY_UP,
-    (SDL_KEYUP, SDLK_LEFT): LEFTKEY_UP,
-    (SDL_KEYUP, SDLK_UP): UPKEY_UP,
-    (SDL_KEYUP, SDLK_DOWN): DOWNKEY_UP,
-    (SDL_KEYDOWN, SDLK_SPACE): SPACE
+    (SDL_KEYDOWN, SDLK_d): RIGHTKEY_DOWN,
+    (SDL_KEYDOWN, SDLK_a): LEFTKEY_DOWN,
+    (SDL_KEYDOWN, SDLK_w): UPKEY_DOWN,
+    (SDL_KEYDOWN, SDLK_s): DOWNKEY_DOWN,
+    (SDL_KEYUP, SDLK_d): RIGHTKEY_UP,
+    (SDL_KEYUP, SDLK_a): LEFTKEY_UP,
+    (SDL_KEYUP, SDLK_w): UPKEY_UP,
+    (SDL_KEYUP, SDLK_s): DOWNKEY_UP,
+    (SDL_KEYDOWN, SDLK_j): SPACE
 }
 class WalkingState:
     @staticmethod
@@ -79,19 +79,19 @@ class WalkingState:
     @staticmethod
     def draw(character):
         if character.x_dir>0:
-            character.image.clip_draw(int(character.frame) * 100, 0, 100, 100, character.x, character.y)
+            character.image.clip_draw(int(character.frame), 0, 100, 100, character.x, character.y)
             character.dir = 4
         elif character.x_dir <0:
-            character.image.clip_draw(int(character.frame) * 100, 100, 100, 100, character.x, character.y)
+            character.image.clip_draw(int(character.frame), 0, 100, 100, character.x, character.y)
             character.dir = 5
         elif character.x_dir ==0 and character.y_dir >0:
-            character.image.clip_draw(int(character.frame) * 100, 200, 100, 100, character.x, character.y)
+            character.image.clip_draw(int(character.frame), 0, 100, 100, character.x, character.y)
             character.dir = 6
         elif character.x_dir ==0 and character.y_dir <0:
-            character.image.clip_draw(int(character.frame) * 100, 300, 100, 100, character.x, character.y)
+            character.image.clip_draw(int(character.frame), 0, 100, 100, character.x, character.y)
             character.dir = 7
         elif character.x_dir ==0 and character.y_dir ==0:
-            character.image.clip_draw(int(character.frame) * 100, abs((character.face_dir))*100, 100, 100, character.x, character.y)
+            character.image.clip_draw(int(character.frame), abs((character.face_dir)), 100, 100, character.x, character.y)
 
 
 next_state_table = {
@@ -104,7 +104,7 @@ next_state_table = {
 class Character:
     image = None
     def __init__(self):
-        self.x, self.y = 50, 90
+        self.x, self.y = 256, 350
         if Character.image is None:
             Character.image =load_image('char1.png')
         self.frame = 0
