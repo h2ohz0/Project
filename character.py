@@ -1,5 +1,5 @@
 from pico2d import *
-from Star import Star
+from Fire import Fire
 from sight import Sight
 import game_framework
 import game_world
@@ -64,7 +64,7 @@ class WalkingState:
     def exit(character, event):
         character.face_dir = character.dir
         if event == SPACE:
-            character.star()
+            character.fire()
         elif event == SDLK_a:
             character.sight()
 
@@ -124,10 +124,10 @@ class Character:
         self.__init__()
         self.__dict__.update(state)
 
-    def star(self):
+    def fire(self):
         # star = Star.star_diretion(self.dir)
-        star = Star(self.x, self.y, self.dir * 0.5,self.face_dir)
-        game_world.add_object(star, 1)
+        fire = Fire(self.x, self.y, self.dir * 0.5,self.face_dir)
+        game_world.add_object(fire, 1)
 
     def sight(self):
         print('sight')
