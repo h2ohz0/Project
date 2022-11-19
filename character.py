@@ -126,7 +126,7 @@ class Character:
 
     def fire(self):
         # star = Star.star_diretion(self.dir)
-        fire = Fire(self.x, self.y, self.dir * 0.5,self.face_dir)
+        fire = Fire(self.x+55, self.y-25, self.dir * 0.5,self.face_dir)
         game_world.add_object(fire, 1)
 
     def sight(self):
