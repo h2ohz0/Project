@@ -1,5 +1,5 @@
 from pico2d import*
-import mygame
+import character
 import random
 class Walk:
     @staticmethod
@@ -13,7 +13,7 @@ class Walk:
         obj.images[0].clip_draw(int(obj.frame) * 124, 0, 124, 73, obj.x, obj.y)
     @staticmethod
     def update(obj):
-        obj.frame = (obj.frame + 3 * mygame.ACTION_PER_TIME * mygame.frame_time) % 3
+        obj.frame = (obj.frame + 3 * character.ACTION_PER_TIME * character.frame_time) % 3
     @staticmethod
     def exit(obj):
         pass
@@ -34,7 +34,7 @@ class Dead:
     def update(obj):
         if obj.frame >= 5:
             obj.active = False
-        obj.frame = (obj.frame + 6 * mygame.ACTION_PER_TIME * mygame.frame_time ) % 6
+        obj.frame = (obj.frame + 6 * character.ACTION_PER_TIME * character.frame_time ) % 6
     @staticmethod
     def exit(obj):
         obj.active = False
@@ -48,8 +48,8 @@ class Enemy:
         self.x = 900
         self.y = 200
         self.frame = 0
-        self.images = [load_image("enemy1_2.png"),load_image("enemy1_3.png")]
-        # self.velocity = mygame.GRASS_SPEED_PPS * 1.5
+        self.images = [load_image("image/enemy1_2.png"),load_image("image/enemy1_3.png")]
+        # self.velocity = character.GRASS_SPEED_PPS * 1.5
         self.active = False
         self.current_state = Dead
     def enter(self):
@@ -60,7 +60,7 @@ class Enemy:
             self.current_state.draw(self)
     def update(self):
         self.current_state.update(self)
-        mygame.move_update(self)
+        character.move_update(self)
     def exit(self):
         self.current_state.exit(self)
     def get_bb(self):

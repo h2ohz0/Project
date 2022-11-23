@@ -106,7 +106,7 @@ class Character:
     def __init__(self):
         self.x, self.y = 256, 350
         if Character.image is None:
-            Character.image =load_image('char1.png')
+            Character.image =load_image('image/char1.png')
         self.frame = 0
         self.dir = 1
         self.face_dir =4

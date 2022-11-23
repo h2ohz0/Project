@@ -15,7 +15,7 @@ class Fire:
 
     def __init__(self, x= 100 , y = 684//2, velocity = 1,dir=4):
         if Fire.image == None:
-            Fire.image = load_image('fire.png')
+            Fire.image = load_image('image/fire.png')
         self.x, self.y, self.velocity,self.star_dir = x, y, velocity, dir
 
     def draw(self):
