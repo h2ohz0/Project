@@ -1,5 +1,5 @@
 from pico2d import *
-from Fire import Fire
+from fire import Fire
 from sight import Sight
 import game_framework
 import game_world
