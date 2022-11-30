@@ -1,11 +1,32 @@
 import game_framework
 import pico2d
-
+import title_state
 import play_state
 
 pico2d.open_canvas(1024, 684)
-game_framework.run(play_state)
+game_framework.run(title_state)
 pico2d.close_canvas()
+
+# import pico2d
+# import logo_state
+# import title_state
+# import play_state
+#
+# state = logo_state # 모듈을 변수로 취급
+#
+# pico2d.open_canvas(1024,684)
+#
+# states= [logo_state, title_state, play_state]
+# for state in states:
+#     state.enter()
+#     while state.running():
+#         state.handle_events()
+#         state.update()
+#         state.draw()
+#     state.exit()
+#
+# pico2d.close_canvas()
+
 
 # import game_framework
 #

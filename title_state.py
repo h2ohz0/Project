@@ -6,7 +6,7 @@ image = None
 
 def enter():
     global image
-    image = load_image('Insector_X_Title.png')
+    image = load_image('image/Insector_X_Title.png')
 
 def exit():
     global image
@@ -25,17 +25,17 @@ def handle_events():
 
 def draw():
     clear_canvas()
-    image.draw(400,300)
+    image.draw(1024//2,684//2)
     update_canvas()
 
 def update():
-    global logo_time
-    delay(0.05)
-    logo_time += 0.05
-    if logo_time > 1.0:
-        logo_time = 0
-        # game_framework.quit()
-        game_framework.chage_state(play_state)
+    # global logo_time
+    # delay(0.05)
+    # logo_time += 0.05
+    # if logo_time > 1.0:
+    #     logo_time = 0
+    #     # game_framework.quit()
+    #     game_framework.chage_state(play_state)
     pass
 
 def pause():

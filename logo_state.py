@@ -8,7 +8,7 @@ logo_time = 0.0
 
 def enter():
     global image
-    image = load_image('tuk_credit.png')
+    image = load_image('image/Insector_X_Title.png')
     pass
 
 def exit():
@@ -29,7 +29,7 @@ def update():
 
 def draw():
     clear_canvas()
-    image.draw(400,300)
+    image.draw(1024//2,684//2)
     update_canvas()
 
 def handle_events():
