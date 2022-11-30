@@ -2,6 +2,7 @@ from pico2d import *
 import title_state
 import game_framework
 import game_world
+import pause_state
 
 from character import Character
 from bg_jungle import BG_jungle
@@ -15,7 +16,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.change_state(pause_state)
         else:
             character.handle_event(event)
 
