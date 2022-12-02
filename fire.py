@@ -16,7 +16,7 @@ class Fire:
     def __init__(self, x= 100 , y = 684//2, velocity = 1,dir=4):
         if Fire.image == None:
             Fire.image = load_image('image/fire.png')
-        self.x, self.y, self.velocity,self.star_dir = x, y, velocity, dir
+        self.x, self.y, self.velocity,self.fire_dir = x, y, velocity, dir
 
     def draw(self):
         self.image.draw(self.x, self.y)
@@ -34,4 +34,14 @@ class Fire:
         if self.x <30 or self.x >width-30:
             game_world.remove_object(self)
         elif self.y <30 or self.y >height -40:
+            game_world.remove_object(self)
+
+    # def get_direction(self, cur_RL_dir, cur_UD_dir):
+    #     self.RL_direction = cur_RL_dir
+    #     self.UD_direction = cur_UD_dir
+
+    def get_bb(self):
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+    def handle_collision(self, other, group):
+        if group == 'fire:enemies':
             game_world.remove_object(self)
