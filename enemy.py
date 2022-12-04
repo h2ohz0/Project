@@ -2,6 +2,7 @@ from pico2d import *
 import random
 import game_framework
 import game_world
+import gameover_state
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
@@ -22,29 +23,32 @@ class Enemy:
         self.frame = 5
         self.x = 1024
         self.y = random.randint(142,542)
-        self.move_speed = 0.5
+        self.move_speed = 0.6
+        self.fail_sound = load_wav('bgm/fail.wav')
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 7
         self.x -= self.move_speed * RUN_SPEED_PPS * game_framework.frame_time
         if self.x < 0:
             game_world.remove_object(self)
+            self.fail_sound.play()
+            game_framework.push_state(gameover_state)
 
     def draw(self):
         self.image.clip_draw(int(self.frame)*192, 7, 192, 241, self.x, self.y)
         # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x - 15, self.y - 15, self.x + 10, self.y + 15
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
 
     def handle_collision(self, other, group):
         if group == 'fire:enemies':
             game_world.remove_object(self)
-        # if group == 'character:enemies':
+        # if group == 'left:enemies':
         #     game_world.remove_object(self)
 
 
-# from pico2d import*
+# from pico2d import*s
 # import character
 # import random
 # class Walk:

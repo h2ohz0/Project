@@ -3,11 +3,15 @@ import game_framework
 import play_state
 import game_world
 
+from bg_jungle import BG_jungle
 image = None
 
 def enter():
+    clear_canvas()
+    bg_jungle = BG_jungle()
     global image
     image = load_image('image/Insector_X_Title.png')
+    bg_jungle.bgm.stop()
 
 def exit():
     global image
@@ -20,11 +24,13 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             game_world.clear()
-            game_framework.change_state(play_state)
+            game_framework.push_state(play_state)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-    pass
 
+def draw_world():
+    for game_object in game_world.all_objects():
+        game_object.draw()
 def draw():
     clear_canvas()
     image.draw(1024//2,684//2)

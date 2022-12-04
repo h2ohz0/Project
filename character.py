@@ -4,6 +4,9 @@ from sight import Sight
 import game_framework
 import game_world
 import gameover_state
+
+from bg_jungle import BG_jungle
+import play_state
 width, height = 1024, 684
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -112,9 +115,12 @@ class Character:
         self.q = []
         self.cur_state = RUN
         self.cur_state.enter(self, None)
-        self.font = load_font('font/ENCR10B.TTF', 16)
+        self.font = load_font('font/ENCR10B.TTF', 32)
         self.HP = 100
         self.hit_flag = 1
+        self.fail_sound = load_wav('bgm/fail.wav')
+
+
 
     def __getstate__(self):
         state = {'x': self.x, 'y': self.y, 'dir': self.dir, 'cur_state': self.cur_state}
@@ -150,7 +156,9 @@ class Character:
             self.cur_state.enter(self, event)
 
         if self.HP <= 0:
+            self.fail_sound.play()
             game_framework.push_state(gameover_state)
+
 
 
     def draw(self):
@@ -169,13 +177,15 @@ class Character:
             self.add_event(key_event) #변환된 내부 이벤트를 큐에 추가
 
     def get_bb(self):
-        return self.x - 13, self.y - 16, self.x + 10, self.y + 13
+        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def handle_collision(self, other, group):
         if group == 'character:enemies':
-            self.HP -= 0.01
+            self.HP -= 0.1
             if self.hit_flag >= 1:
                 self.hit_flag = 0
+        # if group == 'left:enemies':
+        #     game_framework.push_state(gameover_state)
             pass
 
 

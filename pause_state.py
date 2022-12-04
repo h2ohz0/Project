@@ -4,11 +4,17 @@ import game_world
 import play_state
 import title_state
 
+from bg_jungle import BG_jungle
+from enemy import Enemy
+
 image = None
+pause_music = True
 
 def enter():
+    bg_jungle = BG_jungle()
     global image
     image = load_image('image/press_space_continue.jpg')
+    bg_jungle.bgm.stop()
 
 
 def exit():
@@ -17,6 +23,7 @@ def exit():
 
 
 def handle_events():
+    enemy = Enemy()
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -24,6 +31,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             game_framework.pop_state()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            game_world.clear()
             game_framework.change_state(title_state)
     pass
 

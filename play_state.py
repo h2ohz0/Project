@@ -5,7 +5,6 @@ import game_framework
 import game_world
 import pause_state
 
-from character import Character
 from bg_jungle import BG_jungle
 from character import Character
 from enemy import Enemy
@@ -27,6 +26,7 @@ def handle_events():
             character.handle_event(event)
 
 def enter():
+    clear_canvas()
     global character, bg_jungle
     character = Character()
     bg_jungle = BG_jungle()
@@ -35,11 +35,14 @@ def enter():
 
 def add_enemy():
     global enemy
+    # character = Character()
     enemy = Enemy()
+    # bg_jungle = BG_jungle()
     # enemies.append(Enemy())
     game_world.add_object(enemy, 1)
     game_world.add_collision_group(character, enemy, 'character:enemies')
     game_world.add_collision_group(character.fire(), enemy, 'fire:enemies')
+    # game_world.add_collision_group(bg_jungle, enemy, 'left:enemies')
 
 #게임 종료 - 객체를 소멸
 def exit():
@@ -58,7 +61,7 @@ def update():
 
     global i_flag
     i_flag += 1
-    if i_flag == 500:
+    if i_flag == 100:
         add_enemy()
         i_flag = 0
 def draw_world():
@@ -86,7 +89,6 @@ def colide(a, b):
     if right_a < left_b: return False
     if top_a < bottom_b: return False
     if bottom_a > top_b: return False
-
     return True
 
 def test_self():
@@ -98,3 +100,4 @@ def test_self():
 
 if __name__ == '__main__':
     test_self()
+
